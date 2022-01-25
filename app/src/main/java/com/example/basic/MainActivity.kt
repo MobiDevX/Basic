@@ -1,5 +1,6 @@
 package com.example.basic
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -14,9 +15,9 @@ import android.view.View
 import com.example.basic.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    var id_color = Color.BLUE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,12 +31,20 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        binding.fab.setOnClickListener(View.OnClickListener {
+            val sb: Snackbar = Snackbar.make(
+                findViewById(R.id.coordinatorLayout),
+                R.string.snackbar_text, Snackbar.LENGTH_LONG)
+            val sbView = sb.view
+            sbView.setBackgroundColor(id_color)
+            sb.show()
+        })
+/*
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+            Snackbar.make(view, R.string.snackbar_text, Snackbar.LENGTH_LONG)
+                .show()
+        }*/
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -51,8 +60,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-*/
+    }*/
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -63,30 +71,49 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.coordinatorLayout),
             R.string.snackbar_text, Snackbar.LENGTH_LONG)
         val sbView: View = sb.view
+        sbView.setBackgroundColor(id_color)
         return when (id) {
             R.id.green_item -> {
                 // Green item was selected
-                sbView.setBackgroundColor(Color.GREEN)
+                id_color = Color.GREEN
+                sbView.setBackgroundColor(id_color)
                 sb.show()
                 true
             }
             R.id.yellow_item -> {
                 // Yellow item was selected
-                sbView.setBackgroundColor(Color.YELLOW)
+                id_color = Color.YELLOW
+                sbView.setBackgroundColor(id_color)
                 sb.show()
                 true
             }
             R.id.red_item -> {
-                sbView.setBackgroundColor(Color.RED)
+                id_color = Color.RED
+                sbView.setBackgroundColor(id_color)
                 sb.show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val prefs = getSharedPreferences(localClassName, Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putInt("idColor", id_color)
+        editor.apply()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = getSharedPreferences(localClassName, MODE_PRIVATE)
+        id_color = prefs.getInt("idColor", Color.BLACK)
     }
 }
