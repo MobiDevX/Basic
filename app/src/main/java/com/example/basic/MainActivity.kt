@@ -1,5 +1,6 @@
 package com.example.basic
 
+import android.graphics.Color
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.example.basic.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -34,12 +36,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
+/*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -49,7 +52,38 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+*/
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        val id = item.itemId
+        val sb: Snackbar = Snackbar.make(
+            findViewById(R.id.coordinatorLayout),
+            R.string.snackbar_text, Snackbar.LENGTH_LONG)
+        val sbView: View = sb.view
+        return when (id) {
+            R.id.green_item -> {
+                // Green item was selected
+                sbView.setBackgroundColor(Color.GREEN)
+                sb.show()
+                true
+            }
+            R.id.yellow_item -> {
+                // Yellow item was selected
+                sbView.setBackgroundColor(Color.YELLOW)
+                sb.show()
+                true
+            }
+            R.id.red_item -> {
+                sbView.setBackgroundColor(Color.RED)
+                sb.show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
